@@ -254,8 +254,7 @@ $packagePrefixes = 'AppUp.IntelManagementandSecurityStatus',
 'MSTeams',
 'MicrosoftTeams', 
 'Microsoft.WindowsTerminal',
-'Microsoft.549981C3F5F10',
-'Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe!App'
+'Microsoft.549981C3F5F10'
 
 $packagesToRemove = $packages | Where-Object {
     $packageName = $_
@@ -269,9 +268,18 @@ Write-Output "Removing Edge:"
 Remove-Item -Path "$ScratchDisk\scratchdir\Program Files (x86)\Microsoft\Edge" -Recurse -Force | Out-Null
 Remove-Item -Path "$ScratchDisk\scratchdir\Program Files (x86)\Microsoft\EdgeUpdate" -Recurse -Force | Out-Null
 Remove-Item -Path "$ScratchDisk\scratchdir\Program Files (x86)\Microsoft\EdgeCore" -Recurse -Force | Out-Null
-& 'takeown' '/f' "$ScratchDisk\scratchdir\Windows\System32\Microsoft-Edge-Webview" '/r' | Out-Null
-& 'icacls' "$ScratchDisk\scratchdir\Windows\System32\Microsoft-Edge-Webview" '/grant' "$($adminGroup.Value):(F)" '/T' '/C' | Out-Null
-Remove-Item -Path "$ScratchDisk\scratchdir\Windows\System32\Microsoft-Edge-Webview" -Recurse -Force | Out-Null
+Remove-Item -Path "$ScratchDisk\scratchdir\Program Files (x86)\Microsoft\EdgeWebView" -Recurse -Force | Out-Null
+
+foreach ($webviewPath in @(
+    "$ScratchDisk\scratchdir\Windows\System32\Microsoft-Edge-Webview",
+    "$ScratchDisk\scratchdir\Windows\SystemApps\Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe"
+)) {
+    if (Test-Path $webviewPath) {
+        & 'takeown' '/f' $webviewPath '/r' | Out-Null
+        & 'icacls' $webviewPath '/grant' "$($adminGroup.Value):(F)" '/T' '/C' | Out-Null
+        Remove-Item -Path $webviewPath -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
 
 Write-Output "Removing OneDrive:"
 dism /Image:"$ScratchDisk\scratchdir" /Remove-ProvisionedAppxPackage /PackageName:Microsoft.OneDriveSync_8wekyb3d8bbwe | Out-Null
@@ -379,8 +387,22 @@ Set-RegistryValue 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\Windows Mail' 'Prev
 
 # Disable AI
 Set-RegistryValue 'HKLM\zSOFTWARE\Policies\WindowsNotepad' 'DisableAIFeatures' 'REG_DWORD' '1'
-Write-Output "Prevent taking Screenshots for Recall"
+Set-RegistryValue 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint' 'DisableCocreator' 'REG_DWORD' '1'
+Set-RegistryValue 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint' 'DisableGenerativeFill' 'REG_DWORD' '1'
+Set-RegistryValue 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint' 'DisableImageCreator' 'REG_DWORD' '1'
+Set-RegistryValue 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint' 'DisableGenerativeErase' 'REG_DWORD' '1'
 Set-RegistryValue 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsAI' 'DisableAIDataAnalysis' 'REG_DWORD' '1'
+Set-RegistryValue 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsAI' 'AllowRecallEnablement' 'REG_DWORD' '0'
+Set-RegistryValue 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\OOBE' 'DisablePrivacyExperience' 'REG_DWORD' '1'
+
+# Edge removal - registry part
+Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Run\MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C'
+Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Run\Microsoft Edge Update'
+Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run\MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C'
+Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run\Microsoft Edge Update'
+
+# Disable the new "Search contents of online files" toggle (Privacy & security > Search)
+Set-RegistryValue 'HKLM\zNTUSER\Software\Microsoft\Windows\CurrentVersion\Search' 'AllowCloudSearch' 'REG_DWORD' '0'
 
 Write-Host "Deleting scheduled task definition files..."
 $tasksPath = "$ScratchDisk\scratchdir\Windows\System32\Tasks"
