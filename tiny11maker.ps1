@@ -393,12 +393,6 @@ Set-RegistryValue 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsAI' 'Disable
 Set-RegistryValue 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsAI' 'AllowRecallEnablement' 'REG_DWORD' '0'
 Set-RegistryValue 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\OOBE' 'DisablePrivacyExperience' 'REG_DWORD' '1'
 
-# Edge removal - registry part
-Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Run\MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C'
-Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Run\Microsoft Edge Update'
-Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run\MicrosoftEdgeAutoLaunch_A9F6DCE4ABADF4F51CF45CD7129E3C6C'
-Remove-RegistryValue 'HKLM\zSoftware\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run\Microsoft Edge Update'
-
 # Disable the new "Search contents of online files" toggle (Privacy & security > Search)
 Set-RegistryValue 'HKLM\zNTUSER\Software\Microsoft\Windows\CurrentVersion\Search' 'AllowCloudSearch' 'REG_DWORD' '0'
 
