@@ -394,19 +394,9 @@ Set-RegistryValue 'HKLM\zSOFTWARE\Policies\Microsoft\Windows\WindowsAI' 'AllowRe
 Set-RegistryValue 'HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\OOBE' 'DisablePrivacyExperience' 'REG_DWORD' '1'
 
 # Disable Edge - registry side
-reg delete "HKLM\zSOFTWARE\Microsoft\EdgeUpdate" /f 2>&1
-reg delete "HKLM\zSOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /f 2>&1
-reg delete "HKLM\zDEFAULT\Software\Microsoft\EdgeUpdate" /f 2>&1
-reg delete "HKLM\zNTUSER\Software\Microsoft\EdgeUpdate" /f 2>&1
 reg delete "HKLM\zSOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f 2>&1
-reg delete "HKLM\zSOFTWARE\WOW6432Node\Microsoft\Edge" /f 2>&1
-reg delete "HKLM\zSOFTWARE\WOW6432Node\Microsoft\EdgeUpdate" /f 2>&1
-reg delete "HKLM\zSYSTEM\CurrentControlSet\Services\edgeupdate" /f 2>&1
 reg delete "HKLM\zSYSTEM\ControlSet001\Services\edgeupdate" /f 2>&1
-reg delete "HKLM\zSYSTEM\CurrentControlSet\Services\edgeupdatem" /f 2>&1
 reg delete "HKLM\zSYSTEM\ControlSet001\Services\edgeupdatem" /f 2>&1
-reg delete "HKLM\zSOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge" /f 2>&1
-reg delete "HKLM\zSOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge Update" /f 2>&1
 reg add "HKLM\zSOFTWARE\Microsoft\MicrosoftEdge\Main" /v "AllowPrelaunch" /t REG_DWORD /d "1" /f 2>&1
 reg add "HKLM\zSOFTWARE\Policies\Microsoft\MicrosoftEdge\Main" /v "AllowPrelaunch" /t REG_DWORD /d "1" /f 2>&1
 reg add "HKLM\zNTUSER\Software\Microsoft\MicrosoftEdge\Main" /v "AllowPrelaunch" /t REG_DWORD /d "1" /f 2>&1
